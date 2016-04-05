@@ -4,12 +4,26 @@
 	box-sizing: border-box;
 }
 
+#icons {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	padding: 10px;
+	background-color: #d9d9d9;
+	font-size: 20px;
+}
+
+#icons span {
+	cursor: pointer;
+}
+
 #chart_div {
+	padding-top: 60px;
 	width: 100%;
 }
 
 #chart_menu {
-	overflow-y: scroll;
 	position: absolute;
 	top: 0;
 	right: 0;
@@ -17,67 +31,74 @@
 	height: 100vh;
 	text-align: center;
 	background-color: #d9d9d9;
-	z-index: 9;
+	z-index: 5;
 }
 
-#chart_menu .block {
-	width: 100%;
-	height: 100%;
-	display: block;
-}
-
-#chart_menu .block .elem {
-	position: relative;
+#chart_menu .elem {
 	width: 100%;
 	height: 200px;
 }
 
-.elem .drag_handle {
-	width: 20px;
-	height: 20px;
-	background-color: red;
-	position: absolute;
-	left: 0px;
-	top: 0;
-	z-index: 9;
+#chart_menu .elem .graph_img {
+	width: 100%;
+}
+
+.elem {
+	z-index: 8;
+}
+
+.elem.dragging {
+	z-index: 9 !important;
 }
 
 #chart_menu .block .elem img {
 	height: 100%;
 }
 
-#chart_menu .block .elem .chart {
-}
-
 #body {
 	width: 100%;
 	padding-right: 350px;
 	padding-left: 50px;
-	text-align: center;
-	z-index: 5;
+	z-index: 2;
 }
 
-#body .block .elem {
-	height: auto;
+#body .block .chart {
+	height: 100%;
 	width: 100%;
-	z-index: 9;
+	z-index: 4;
+	box-shadow: 0 8px 16px rgba(0,0,0,0.10), 0 5px 5px rgba(0,0,0,0.13);
 }
 
 #body .block {
 	position: relative;
-	overflow: hidden;
 	display: inline-block;
-	width: 30%;
-	margin-left: 20px;
-	margin-right: 20px;
-	margin-top: 40px;
+	width: 450px;
+	margin: 20px;
 	height: 200px;
 	background-color: #d9d9d9;
-	resize: vertical;
 }
 
-#body .block .drag_handle {
-	width: 20px;
-	height: 20px;
-	background-color: red;
+#body .block.ninja {
+	height: 0;
+}
+
+#body .block .icons {
+	font-size: 24px;
+	position: absolute;
+	top: -28px;
+	right: 0;
+	display: none;
+	padding: 2px;
+}
+
+#body .block .fa {
+	cursor: pointer;
+}
+
+#body .block .fa-times {
+	color: #e74c3c;
+}
+
+#body .block.active:hover .icons, #body .block.active .icons:hover {
+	display: block;
 }

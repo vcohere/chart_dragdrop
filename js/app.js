@@ -21,6 +21,8 @@
 				if (e.pageX < offset.right && e.pageX > offset.left &&
 					e.pageY > offset.top && e.pageY < offset.bottom) {
 					res = $(this);
+
+					$('.elem.dragging').closest('.block').attr('style', '');
 					$(this).append($('.elem.dragging'));
 					$('.elem.dragging').attr('style', '').removeClass('dragging');
 					window.dispatchEvent(new Event('resize'));
@@ -32,11 +34,11 @@
 
 		this.mousedown(function() {
 			dragged = $(this);
-			dragged.closest('.elem').addClass('dragging');
+			dragged.closest('.elem').addClass('dragging').after('<div class="elem temp"></div>');
 
-			$('#chart_div').mousemove(function(e) {
+			$(document).mousemove(function(e) {
 				if (e.buttons !== 1) {
-					$('#chart_div').unbind();
+					$(document).off('mousemove');
 					return false;
 				}
 				window.getSelection().removeAllRanges();
@@ -45,11 +47,54 @@
 		});
 
 		$(document).mouseup(function(e) {
-			if ($('.elem.dragging').length > 0) {
+			if ($('.elem').hasClass('dragging')) {
+				$('.elem.temp').remove();
 				cursorIn(e);
 				$('#chart_div').unbind();
 				$('.elem.dragging').removeClass('dragging');
 			}
+		});
+
+		$('.elem .handles .resize_horizon').click(function() {
+			var block = $(this).closest('.block'),
+				elem = $(this).closest('.elem');
+
+			if (block.parent().is('#chart_menu'))
+				return false;
+			if (elem.attr('horizon') == '1') {
+				block.width(block.width() * 2 + parseInt(block.css('margin-left')) * 2);
+				elem.attr('horizon', '2');
+			}
+			else if (elem.attr('horizon') == '2') {
+				block.width(block.width() * 1.5 + parseInt(block.css('margin-left')) * 2);
+				elem.attr('horizon', '3');
+			}
+			else {
+				block.width('');
+				elem.attr('horizon', '1');
+			}
+			window.dispatchEvent(new Event('resize'));
+		});
+
+		$('.elem .handles .resize_vertical').click(function() {
+			var block = $(this).closest('.block'),
+				elem = $(this).closest('.elem');
+
+			if (block.parent().is('#chart_menu'))
+				return false;
+			if (elem.attr('vertical') == '1') {
+				block.height(block.height() * 2 + parseInt(block.css('margin-top')) * 2);
+				elem.attr('vertical', '2');
+			}
+			else if (elem.attr('vertical') == '2') {
+				block.height(block.height() * 1.5 + parseInt(block.css('margin-top')) * 2);
+				elem.attr('vertical', '3');
+			}
+			else {
+				block.height('');
+				elem.attr('vertical', '1');
+			}
+			window.dispatchEvent(new Event('resize'));
 		});
 	}
 })(jQuery);
@@ -71,9 +116,44 @@ $(document).ready(function() {
 		}]
 	};
 
-	$('#bar_chart').highcharts(options);
-	$('#bar_chart2').highcharts(options);
-	$('#bar_chart3').highcharts(options);
+	var options2 = {
+		chart: {
+			type: 'bar'
+		},
+		title: {
+			text: 'Chart Test'
+		},
+		series: [{
+			name: 'OKAY',
+			data: [1, 0, 4]
+		}, {
+			name: 'SALUT',
+			data: [2, 6, 3]
+		}]
+	};
 
-	$('.elem .drag_handle').drag();
+	$('#bar_chart').highcharts(options);
+	$('#bar_chart2').highcharts(options2);
+	$('#bar_chart3').highcharts(options);
+	$('#bar_chart4').highcharts(options);
+	$('#bar_chart5').highcharts(options);
+	$('#bar_chart6').highcharts(options);
+
+	$('.elem .drag').drag();
+
+	$('#body').masonry({
+		itemSelector: '.block'
+	});
+
+	$('#icons .hide').click(function() {
+		$('.elem .handles').toggleClass('hidden');
+		if ($('.elem .handles:first').hasClass('hidden'))
+			$(this).removeClass('fa-eye').addClass('fa-eye-slash');
+		else
+			$(this).removeClass('fa-eye-slash').addClass('fa-eye');
+	});
+
+	$('#icons .refresh').click(function() {
+		window.dispatchEvent(new Event('resize'));
+	});
 });
